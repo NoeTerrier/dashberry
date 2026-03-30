@@ -1,0 +1,327 @@
+/* App-wide styling */
+
+:root {
+    --primary-bg-color: #09101F;
+    --primary-text-color: white;
+
+    --secondary-bg-color: rgb(15, 24, 41);
+    --note-text-color: rgb(106, 125, 136);
+
+    --border-color: rgb(30, 45, 69);
+
+    --accent-color: rgb(63, 129, 252);
+    
+    --error-color: rgb(244, 0, 69);
+    --warning-color: rgb(255, 177, 21);
+    --ok-color: rgb(27, 199, 73);
+}
+
+/*
+:root {
+    --primary-bg-color: #110626;
+    --secondary-bg-color: #170833;
+
+    --primary-text-color: #ffffff;
+    --note-text-color: #6c68b5;
+
+    --border-color: rgb(54, 16, 104);
+    --accent-color: #12f289;
+
+
+    --error-color: #ff0055;
+    --warning-color: #ffcc55;
+    --ok-color: #12f289;
+}
+*/
+
+body {
+    background-color: var(--primary-bg-color);
+    color: var(--primary-text-color);
+    font-family: 'Courier New', monospace;
+    margin: 20px;
+
+    background: radial-gradient(var(--note-text-color) 1.2px, var(--primary-bg-color) 1.2px);
+    background-size: 70px 70px;
+}
+
+#header {
+    font-size: 2em;
+    font-weight: bold;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+    height: 2em;
+    background: linear-gradient(90deg, var(--primary-bg-color) 0, transparent 100%);
+
+    img {
+        height: 1em;
+        width: 1em;
+    }
+}
+
+#main-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 1em;
+}
+
+.card {
+    background-color: var(--secondary-bg-color);
+    border: 1px solid var(--border-color);
+    padding: 1em;
+    height: calc(100% - 2em);
+    border-radius: 10px;
+
+    .card-title {
+        color: var(--note-text-color);
+        margin-bottom: 1em;
+        text-transform: uppercase;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                 Note style                                 */
+/* -------------------------------------------------------------------------- */
+
+.note {
+    color: var(--note-text-color);
+    font-size: small;
+}
+
+.highlight {
+    font-weight: bold;
+}
+
+.accent {
+    color: var(--accent-color);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                     Row                                    */
+/* -------------------------------------------------------------------------- */
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-color);
+    align-items: center;
+    padding: 4px 0 4px 0;
+
+    .label {
+        color: var(--note-text-color);
+    }
+}
+
+.row:last-child {
+    border-bottom: none;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                 Progressbar                                */
+/* -------------------------------------------------------------------------- */
+
+.progressbar, .progression {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    height: 5px;
+    border-radius: 5px;
+}
+
+.progressbar {
+    width: 100%;
+    background-color: var(--border-color);
+    
+    .progression {
+        background-color: var(--accent-color);
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                              Temperature card                              */
+/* -------------------------------------------------------------------------- */
+
+.temperature-div {
+    color: var(--note-text-color);;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    padding: 2em;
+    
+    .temperature-value {
+        color: var(--warning-color);
+        font-size: 2em;
+        font-weight: bold;
+    }    
+}
+
+.temperature-hint {
+    margin: auto;
+    text-align: center;
+    color: var(--note-text-color);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                 Memory card                                */
+/* -------------------------------------------------------------------------- */
+
+.memory {
+    padding-bottom: 1em;
+}
+
+.memory:last-child {
+    padding-bottom: 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                  Disk card                                 */
+/* -------------------------------------------------------------------------- */
+
+.disk {
+    padding-bottom: 1em;
+}
+
+.disk:last-child {
+    padding-bottom: 0;
+}
+
+.disk-main-info {
+    display: flex;
+    justify-content: space-between;
+}
+
+.disk-type {
+   text-wrap-mode: nowrap; 
+}
+
+.mount-point {
+    width: auto;
+    text-wrap-mode: nowrap;
+    color: var(--accent-color);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-radius: 5px;
+    padding: 0.25em;
+}
+
+.mount-point:hover {
+    color: white;
+    overflow: visible;
+    background-color: var(--accent-color);
+    z-index: 20;
+    width: fit-content;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                 Docker card                                */
+/* -------------------------------------------------------------------------- */
+
+.image-name {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-radius: 5px;
+    padding: 0.25em;
+    transform: translateX(-0.25em);
+}
+
+.image-name:hover {
+    overflow: visible;
+    background-color: var(--accent-color);
+    z-index: 20;
+    width: fit-content;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding-bottom: 1em;
+    gap: 1em;
+
+    .container-info {
+        width: 80%;
+    }
+
+    img {
+        width: 2em;
+        height: 2em;
+        border: solid 1px rgb(106, 125, 136);
+        border-radius: 10px;
+        padding: 0.25em;
+    }
+}
+
+.container:last-child {
+    padding-bottom: 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                    Tags                                    */
+/* -------------------------------------------------------------------------- */
+
+.tag {
+    border-radius: 20px;
+    padding: 0.25em 0.5em 0.25em 0.5em;
+    border: 1px solid;
+    width: fit-content;
+    font-size: 0.75em;
+    height: 1em;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.status-dot {
+    display: inline-block;
+    border: solid 1px;
+    border-radius: 50%;
+    width: 0.5em;
+    height: 0.5em;
+}
+
+.tag.disabled {
+    border-color: var(--note-text-color);
+    color: var(--note-text-color);
+}
+
+.status-dot.disabled {
+    background-color: transparent;
+    border-color: var(--note-text-color);
+}
+
+.tag.ok {
+    border-color: var(--ok-color);
+    color: var(--ok-color)
+}
+
+.status-dot.ok {
+    background-color: var(--ok-color);
+    border-color: var(--ok-color);
+    box-shadow: 0 0 4px var(--ok-color);
+}
+
+.tag.warning {
+    border-color: var(--warning-color);
+    color: var(--warning-color)
+}
+
+.status-dot.warning {
+    background-color: var(--warning-color);
+    border-color: var(--warning-color);
+    box-shadow: 0 0 4px var(--warning-color);
+}
+
+.tag.error {
+    border-color: var(--error-color);
+    color: var(--error-color)
+}
+
+.status-dot.error {
+    background-color: var(--error-color);
+    border-color: var(--error-color);
+    box-shadow: 0 0 4px var(--error-color);
+}
