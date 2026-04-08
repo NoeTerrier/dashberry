@@ -9,8 +9,13 @@ use crate::{
 };
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
-const MAIN_CSS: Asset = asset!("/assets/main.css");
+const MAIN_CSS: Asset = asset!("/assets/main.scss");
 const LOGO: Asset = asset!("/assets/dashberry.svg");
+#[used]
+static FONT: Asset = asset!(
+    "/assets/ProFont.ttf",
+    AssetOptions::builder().with_hash_suffix(false)
+);
 
 mod backend;
 mod cards;
