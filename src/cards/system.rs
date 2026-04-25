@@ -24,7 +24,6 @@ pub fn SystemCard() -> Element {
             {
                 match &*system.read_unchecked() {
                     Some(s) => {
-                        println!("{system:?}");
                         let mut t = use_signal(|| s.uptime);
                         let mut uptime = use_signal(|| "".to_string());
                         spawn(async move {
