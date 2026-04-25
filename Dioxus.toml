@@ -5,8 +5,6 @@
 # HTML title tag content
 title = "dashberry"
 
-base_path = "dashberry"
-
 # include `assets` in web platform
 [web.resource]
 
