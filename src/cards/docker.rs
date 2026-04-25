@@ -31,8 +31,9 @@ pub fn DockerCard() -> Element {
                                         span { class: "container-name", "{name}" }
                                         Tag {
                                             text: "{container.status}",
+                                            short_text: "{container.state}",
                                             color: "red",
-                                            tag_type: container_state_tag_type(&container.state)
+                                            tag_type: container_state_tag_type(&container.state),
                                         }
                                     }
                                     span { class: "container-name note", "{container.image}" }

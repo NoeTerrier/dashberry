@@ -210,8 +210,8 @@ body {
 
 .docker-list {
     display: grid;
-    grid-template-columns: 50% 50%;
-    row-gap: 1em;
+    grid-template-columns: 1fr 1fr;
+    gap: 1em;
 }
 
 .container-name {
@@ -240,7 +240,7 @@ body {
     break-inside: avoid;
 
     .container-info {
-        width: 80%;
+        width: 100%;
     }
 
     img {
@@ -268,6 +268,10 @@ body {
     display: flex;
     align-items: center;
     gap: 0.5em;
+}
+
+.tag-short-text {
+    display: none;
 }
 
 .status-dot {
@@ -319,4 +323,29 @@ body {
     background-color: var(--error-color);
     border-color: var(--error-color);
     box-shadow: 0 0 4px var(--error-color);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                    Phone                                   */
+/* -------------------------------------------------------------------------- */
+
+@media (max-width: 800px) {
+
+    #main-grid {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .docker-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .tag-text {
+        display: none;
+    }
+
+    .tag-short-text {
+        display: block;
+    }
 }
