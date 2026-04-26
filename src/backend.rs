@@ -151,10 +151,7 @@ pub struct Interface {
 
 #[get("/api/network_info")]
 pub async fn network_info() -> Result<Vec<Interface>> {
-    use netdev::{
-        prelude::{Ipv4Net, Ipv6Net},
-        MacAddr,
-    };
+    use netdev::prelude::{Ipv4Net, Ipv6Net};
 
     let interfaces = netdev::interface::get_interfaces()
         .into_iter()

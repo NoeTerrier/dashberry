@@ -52,6 +52,7 @@ body {
 #main-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    grid-auto-flow: row dense;
     gap: 1em;
 }
 
@@ -210,7 +211,7 @@ body {
 
 .docker-list {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 1em;
 }
 
@@ -233,8 +234,9 @@ body {
 }
 
 .container {
-    display: flex;
+    display: grid;
     align-items: center;
+    grid-template-columns: 2.5em minmax(0, 1fr);
     width: 100%;
     gap: 1em;
     break-inside: avoid;
@@ -257,9 +259,9 @@ body {
 /* -------------------------------------------------------------------------- */
 
 .network-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 0.5em;
-    display: flex;
-    flex-direction: column;
 }
 
 .interface {
@@ -353,6 +355,11 @@ body {
     }
 
     .docker-list {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .network-list {
         display: flex;
         flex-direction: column;
     }

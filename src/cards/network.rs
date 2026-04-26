@@ -18,7 +18,7 @@ pub fn NetworkCard() -> Element {
 
     rsx! {
         div {
-            class: "card",
+            class: "card big",
             CardTitle { title: "🛜 Network interfaces" },
             div { class: "network-list",
                 match &*interfaces.read() {

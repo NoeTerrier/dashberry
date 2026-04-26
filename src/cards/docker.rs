@@ -28,7 +28,7 @@ pub fn DockerCard() -> Element {
                                 img { style: "fill: white;", src: get_icon(&container.image) }
                                 div { class: "container-info",
                                     div { class: "row",
-                                        span { class: "container-name", "{name}" }
+                                        span { "{name}" }
                                         Tag {
                                             text: "{container.status}",
                                             short_text: "{container.state}",
