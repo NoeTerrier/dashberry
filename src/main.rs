@@ -3,8 +3,8 @@ use dioxus::prelude::*;
 use crate::{
     backend::docker_info,
     cards::{
-        disk::DisksCard, docker::DockerCard, memory::MemoryCard, system::SystemCard,
-        temperature::TemperatureCard,
+        disk::DisksCard, docker::DockerCard, memory::MemoryCard, network::NetworkCard,
+        system::SystemCard, temperature::TemperatureCard,
     },
 };
 
@@ -47,6 +47,7 @@ fn App() -> Element {
             SystemCard { }
             TemperatureCard {  }
             MemoryCard {  }
+            NetworkCard {  }
             DisksCard {  }
             {
                 if *docker_available.read() {

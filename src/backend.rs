@@ -1,4 +1,3 @@
-use crate::dioxus_core::anyhow;
 use dioxus::prelude::*;
 use serde::Deserialize;
 use serde::Serialize;
@@ -19,6 +18,7 @@ pub struct System {
 
 #[get("/api/system_info")]
 pub async fn system_info() -> anyhow::Result<System> {
+    use crate::dioxus_core::anyhow;
     Ok(System {
         hostname: sysinfo::System::host_name().ok_or(anyhow!("No hostname"))?,
         product_name: sysinfo::Product::name().ok_or(anyhow!("No product name"))?,
@@ -134,4 +134,38 @@ pub async fn docker_info() -> Result<Containers> {
             status: c.Status,
         })
         .collect())
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   Network                                  */
+/* -------------------------------------------------------------------------- */
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Interface {
+    pub name: String,
+    pub mac_addr: Option<String>,
+    pub ipv4: Vec<String>,
+    pub ipv6: Vec<String>,
+    pub is_up: bool,
+}
+
+#[get("/api/network_info")]
+pub async fn network_info() -> Result<Vec<Interface>> {
+    use netdev::{
+        prelude::{Ipv4Net, Ipv6Net},
+        MacAddr,
+    };
+
+    let interfaces = netdev::interface::get_interfaces()
+        .into_iter()
+        .map(|interface| Interface {
+            name: interface.name.clone(),
+            mac_addr: interface.mac_addr.map(|a| a.address()),
+            is_up: interface.is_up(),
+            ipv4: interface.ipv4.iter().map(Ipv4Net::to_string).collect(),
+            ipv6: interface.ipv6.iter().map(Ipv6Net::to_string).collect(),
+        })
+        .collect();
+
+    Ok(interfaces)
 }

@@ -32,7 +32,6 @@ pub fn DockerCard() -> Element {
                                         Tag {
                                             text: "{container.status}",
                                             short_text: "{container.state}",
-                                            color: "red",
                                             tag_type: container_state_tag_type(&container.state),
                                         }
                                     }
@@ -46,7 +45,6 @@ pub fn DockerCard() -> Element {
                     p { class: "note", "[ NO CONTAINER ]" }
                 }
             }
-
         }
     }
 }

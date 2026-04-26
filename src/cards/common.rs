@@ -78,11 +78,11 @@ impl TagType {
 }
 
 #[component]
-pub fn Tag(text: String, color: String, tag_type: TagType, short_text: String) -> Element {
+pub fn Tag(text: String, tag_type: TagType, short_text: String) -> Element {
     rsx! {
         div {
             class: "tag {tag_type.to_css_class()}",
-            Dot { color, tag_type: tag_type.clone() }
+            Dot { tag_type: tag_type.clone() }
             span { class: "tag-text", "{text}" }
             span { class: "tag-short-text", "{short_text.to_uppercase()}" }
         }
@@ -90,8 +90,8 @@ pub fn Tag(text: String, color: String, tag_type: TagType, short_text: String) -
 }
 
 #[component]
-pub fn Dot(color: String, tag_type: TagType) -> Element {
+pub fn Dot(tag_type: TagType) -> Element {
     rsx! {
-        span { class: "status-dot {tag_type.to_css_class()}", style: "fill: {color}" }
+        span { class: "status-dot {tag_type.to_css_class()}" }
     }
 }

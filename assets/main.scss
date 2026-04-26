@@ -252,6 +252,22 @@ body {
     }
 }
 
+/* -------------------------------------------------------------------------- */
+/*                                  Interface                                 */
+/* -------------------------------------------------------------------------- */
+
+.network-list {
+    gap: 0.5em;
+    display: flex;
+    flex-direction: column;
+}
+
+.interface {
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 0 0.5em 0 0.5em;
+    background-color: var(--primary-bg-color);
+}
 
 /* -------------------------------------------------------------------------- */
 /*                                    Tags                                    */
