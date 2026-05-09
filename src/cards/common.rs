@@ -95,3 +95,43 @@ pub fn Dot(tag_type: TagType) -> Element {
         span { class: "status-dot {tag_type.to_css_class()}" }
     }
 }
+
+#[component]
+pub fn Filter(options: Vec<String>, selected: WriteSignal<String>) -> Element {
+    let mut hidden = use_signal(|| true);
+    rsx! {
+        div {
+            class: "filter",
+            button {
+                class: "select-button",
+                onclick: move |_| hidden.toggle(),
+                span { {(*selected.read()).clone()} }
+                img { src: asset!("assets/filter.svg") }
+            }
+            ul {
+                class: if *hidden.read() { "select-dropdown hidden" } else { "select-dropdown" },
+                for option in options {
+                    FilterOption { option: option, hidden: hidden, selected: selected }
+                }
+            }
+        }
+    }
+}
+
+#[component]
+fn FilterOption(
+    option: String,
+    hidden: WriteSignal<bool>,
+    selected: WriteSignal<String>,
+) -> Element {
+    rsx! {
+        li {
+            class: if *selected.read() == option { "selected" } else { "" },
+            onclick: move |_| {
+                selected.set(option.clone());
+                hidden.toggle();
+            },
+            { option.clone() }
+        }
+    }
+}

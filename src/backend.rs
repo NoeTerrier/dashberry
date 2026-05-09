@@ -140,28 +140,57 @@ pub async fn docker_info() -> Result<Containers> {
 /*                                   Network                                  */
 /* -------------------------------------------------------------------------- */
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct Ipv4 {
+    pub addr: String,
+    pub is_loopback: bool,
+    pub is_private: bool,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct Ipv6 {
+    pub addr: String,
+    pub is_loopback: bool,
+    pub is_unicast_link_local: bool,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Interface {
     pub name: String,
     pub mac_addr: Option<String>,
-    pub ipv4: Vec<String>,
-    pub ipv6: Vec<String>,
+    pub ipv4: Vec<Ipv4>,
+    pub ipv6: Vec<Ipv6>,
     pub is_up: bool,
 }
 
 #[get("/api/network_info")]
 pub async fn network_info() -> Result<Vec<Interface>> {
-    use netdev::prelude::{Ipv4Net, Ipv6Net};
-
     let interfaces = netdev::interface::get_interfaces()
         .into_iter()
         .map(|interface| Interface {
             name: interface.name.clone(),
             mac_addr: interface.mac_addr.map(|a| a.address()),
             is_up: interface.is_up(),
-            ipv4: interface.ipv4.iter().map(Ipv4Net::to_string).collect(),
-            ipv6: interface.ipv6.iter().map(Ipv6Net::to_string).collect(),
+            ipv4: interface
+                .ipv4
+                .iter()
+                .map(|a| Ipv4 {
+                    addr: a.to_string(),
+                    is_loopback: a.addr().is_loopback(),
+                    is_private: a.addr().is_private(),
+                })
+                .collect(),
+            ipv6: interface
+                .ipv6
+                .iter()
+                .map(|a| Ipv6 {
+                    addr: a.to_string(),
+                    is_loopback: a.addr().is_loopback(),
+                    is_unicast_link_local: a.addr().is_unicast_link_local(),
+                })
+                .collect(),
         })
+        .filter(|i| !i.ipv4.is_empty() || !i.ipv6.is_empty())
         .collect();
 
     Ok(interfaces)
