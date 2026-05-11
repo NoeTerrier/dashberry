@@ -60,23 +60,14 @@ fn container_state_tag_type(state: &str) -> TagType {
 }
 
 fn get_icon(image_name: &str) -> String {
-    let mut image_name = image_name.to_string();
-
-    if image_name.contains("\\") {
-        image_name = image_name
-            .chars()
-            .skip_while(|c| *c != '/')
-            .collect::<String>();
-    }
-
-    if image_name.contains(":") {
-        image_name = image_name
-            .chars()
-            .take_while(|c| *c != ':')
-            .collect::<String>();
-    }
-
-    let known_app_names = ["nginx", "immich", "tailscale", "postgres"];
+    let known_app_names = [
+        "nginx",
+        "immich",
+        "tailscale",
+        "postgres",
+        "radicale",
+        "syncthing",
+    ];
 
     for name in known_app_names {
         if image_name.contains(name) {
