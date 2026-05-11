@@ -25,7 +25,7 @@ pub fn Row(label: String, value: String, info_type: InfoType) -> Element {
         div {
             class: "row",
             span { class: "label", "{label}" },
-            span { class: info_type.to_css_class(), "{value}" }
+            span { class: format!("value {}", info_type.to_css_class()), "{value}" }
         }
     )
 }

@@ -16,7 +16,7 @@ pub fn NetworkCard() -> Element {
         interfaces_signal.set(Some(i));
     });
 
-    let selected_signal = use_signal(|| "All".to_string());
+    let selected_signal = use_signal(|| "Public".to_string());
 
     let selected = &*selected_signal.read();
 

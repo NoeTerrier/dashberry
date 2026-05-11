@@ -174,6 +174,12 @@ body {
 
     .label {
         color: var(--note-text-color);
+        padding-right: 1em;
+    }
+
+    .value {
+        text-overflow: ellipsis;
+        overflow: scroll;
     }
 }
 

@@ -37,10 +37,10 @@ pub async fn system_info() -> anyhow::Result<System> {
 pub async fn temperature_info() -> Result<f32> {
     let components = sysinfo::Components::new_with_refreshed_list();
 
-    let temperature = &components
+    let temperature = components
         .iter()
         .map(|c| c.temperature().unwrap_or_default())
-        .sum()
+        .sum::<f32>()
         / (components.len() as f32);
 
     Ok(temperature)
@@ -95,7 +95,7 @@ pub async fn disks_info() -> Result<Disks> {
 
     Ok(disks
         .list()
-        .into_iter()
+        .iter()
         .map(|disk| Disk {
             kind: disk.kind().to_string(),
             name: disk.name().to_string_lossy().to_string(),
