@@ -18,7 +18,7 @@ pub fn TemperatureCard() -> Element {
     rsx! {
         div {
             class: "card",
-            CardTitle { title: "🌡 Temperature" }
+            CardTitle { title: "🌡️ Temperature" }
             div {
                 class: "temperature-div",
                 span { class: "temperature-value", "{temperature:.2}" }

@@ -20,7 +20,7 @@ pub fn SystemCard() -> Element {
     rsx!(
         div {
             class: "card",
-            CardTitle { title: "🖥 System" }
+            CardTitle { title: "🖥️ System" }
             {
                 match &*system.read_unchecked() {
                     Some(s) => {
