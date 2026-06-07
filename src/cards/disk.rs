@@ -17,7 +17,7 @@ pub fn DisksCard() -> Element {
         div {
             class: "card",
             CardTitle { title: "💽 Disks" },
-            for disk in disks.read().iter().filter(|d| !d.mount_point.starts_with("/var")) {
+            for disk in disks.read().iter() {
                 {
                     let available_go = disk.available_space as f64 / 10u64.pow(9) as f64;
                     let total_go = disk.total_space as f64 / 10u64.pow(9) as f64;

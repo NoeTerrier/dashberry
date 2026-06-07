@@ -1,0 +1,82 @@
+diff --git a/src/unix/linux/system.rs b/src/unix/linux/system.rs
+index 8754510..79192b3 100644
+--- a/src/unix/linux/system.rs
++++ b/src/unix/linux/system.rs
+@@ -15,7 +15,7 @@ use std::ffi::CStr;
+ use std::fs::File;
+ use std::io::Read;
+ use std::mem::MaybeUninit;
+-use std::path::Path;
++use std::path::{Path, PathBuf};
+ use std::str::FromStr;
+ use std::sync::{OnceLock, atomic::AtomicIsize};
+ use std::time::Duration;
+@@ -114,7 +114,7 @@ pub const SUPPORTED_SIGNALS: &[crate::Signal] = supported_signals();
+ pub const MINIMUM_CPU_UPDATE_INTERVAL: Duration = Duration::from_millis(200);
+ 
+ fn boot_time() -> Result<u64, crate::Error> {
+-    if let Ok(buf) = File::open("/proc/stat").and_then(|mut f| {
++    if let Ok(buf) = File::open(get_proc_path().join("stat")).and_then(|mut f| {
+         let mut buf = Vec::new();
+         f.read_to_end(&mut buf)?;
+         Ok(buf)
+@@ -213,6 +213,12 @@ impl SystemInner {
+     }
+ }
+ 
++fn get_proc_path() -> PathBuf {
++    std::env::var_os("SYSINFO_PROC_PATH")
++        .map(PathBuf::from)
++        .unwrap_or_else(|| PathBuf::from("/proc"))
++}
++
+ impl SystemInner {
+     pub(crate) fn new() -> Self {
+         Self {
+@@ -227,7 +233,7 @@ impl SystemInner {
+             swap_total: 0,
+             swap_free: 0,
+             cpus: CpusWrapper::new(),
+-            info: SystemInfo::new(),
++            info: SystemInfo::new()
+         }
+     }
+ 
+@@ -236,7 +242,7 @@ impl SystemInner {
+             return;
+         }
+         let mut mem_available_found = false;
+-        read_table("/proc/meminfo", ':', |key, value_kib| {
++        read_table( "/meminfo", ':', |key, value_kib| {
+             let field = match key {
+                 "MemTotal" => &mut self.mem_total,
+                 "MemFree" => &mut self.mem_free,
+@@ -285,7 +291,7 @@ impl SystemInner {
+         let uptime = Self::uptime().unwrap_or(0);
+         let nb_updated = refresh_procs(
+             &mut self.process_list,
+-            Path::new("/proc"),
++            &get_proc_path(),
+             uptime,
+             &self.info,
+             processes_to_update,
+@@ -350,7 +356,7 @@ impl SystemInner {
+ 
+     pub(crate) fn uptime() -> Result<u64, crate::Error> {
+         if cfg!(not(target_os = "android"))
+-            && let Ok(content) = get_all_utf8_data("/proc/uptime", 50)
++            && let Ok(content) = get_all_utf8_data(get_proc_path().join("uptime"), 50)
+             && let Some(uptime) = content.split('.').next().and_then(|t| t.parse().ok())
+         {
+             Ok(uptime)
+@@ -376,8 +382,9 @@ impl SystemInner {
+     }
+ 
+     pub(crate) fn load_average() -> Result<LoadAvg, crate::Error> {
++        
+         let mut s = String::new();
+-        File::open("/proc/loadavg").and_then(|mut f| f.read_to_string(&mut s))?;
++        File::open(get_proc_path().join("loadavg")).and_then(|mut f| f.read_to_string(&mut s))?;
+         let loads = s
+             .trim()
+             .split(' ')

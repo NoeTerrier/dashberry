@@ -89,6 +89,8 @@ pub type Disks = Vec<Disk>;
 
 #[get("/api/disk_info")]
 pub async fn disks_info() -> Result<Disks> {
+    use std::env;
+
     let mut disks = sysinfo::Disks::new();
 
     disks.refresh(false);
@@ -103,6 +105,15 @@ pub async fn disks_info() -> Result<Disks> {
             file_system: disk.file_system().display().to_string(),
             available_space: disk.available_space(),
             total_space: disk.total_space(),
+        })
+        .filter(|d| d.name.starts_with("/dev") && env::var("SYSINFO_PROC_PATH").ok().is_none_or(|p| d.mount_point.starts_with(&p)))
+        .map(|d| {
+            if let Ok(p) = env::var("SYSINFO_PROC_PATH") {
+                let mount_point = d.mount_point.replace(&p, "");
+                Disk { mount_point: if mount_point.is_empty() {"/".to_owned()} else {mount_point}, ..d }
+            } else {
+                d
+            }
         })
         .collect::<Disks>())
 }

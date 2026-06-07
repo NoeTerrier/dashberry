@@ -1,0 +1,3 @@
+[submodule "sysinfo"]
+	path = sysinfo
+	url = https://github.com/GuillaumeGomez/sysinfo.git
