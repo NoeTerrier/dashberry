@@ -117,6 +117,7 @@ pub struct Container {
     pub image: String,
     pub state: String,
     pub status: String,
+    pub project_name: Option<String>
 }
 
 pub type Containers = Vec<Container>;
@@ -132,6 +133,7 @@ pub async fn docker_info() -> Result<Containers> {
             image: c.Image,
             state: c.State,
             status: c.Status,
+            project_name: c.Labels.and_then(|h| h.get("com.docker.compose.project").and_then(|v| v.as_str()).map(|s| s.to_string())),
         })
         .collect())
 }

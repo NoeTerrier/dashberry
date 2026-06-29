@@ -5,8 +5,6 @@ use crate::{
     cards::common::{CardTitle, Tag, TagType},
 };
 
-const ICONS_FOLDER: Asset = asset!("/assets/icons");
-
 #[component]
 pub fn DockerCard() -> Element {
     let mut containers = use_signal(Containers::default);
@@ -25,7 +23,7 @@ pub fn DockerCard() -> Element {
                         let name = container.name.first().and_then(|s| s.strip_prefix('/')).unwrap_or("No name");
                         rsx! {
                             div { class: "container",
-                                img { style: "fill: white;", src: get_icon(&container.image) }
+                                img { style: "fill: white;", src: get_icon(&container.project_name) }
                                 div { class: "container-info",
                                     div { class: "row",
                                         span { "{name}" }
@@ -59,21 +57,10 @@ fn container_state_tag_type(state: &str) -> TagType {
     }
 }
 
-fn get_icon(image_name: &str) -> String {
-    let known_app_names = [
-        "nginx",
-        "immich",
-        "tailscale",
-        "postgres",
-        "radicale",
-        "syncthing",
-    ];
-
-    for name in known_app_names {
-        if image_name.contains(name) {
-            return format!("{ICONS_FOLDER}/{name}.svg");
-        }
+fn get_icon(image_name: &Option<String>) -> String {    
+    if let Some(image_name) = image_name {
+        format!("https://cdn.jsdelivr.net/gh/selfhst/icons@main/svg/{image_name}.svg")
+    } else {
+        asset!("assets/container.svg").to_string()
     }
-
-    asset!("assets/container.svg").to_string()
 }
