@@ -4,6 +4,7 @@
 
 # HTML title tag content
 title = "dashberry"
+data_theme = "dark"
 
 # include `assets` in web platform
 [web.resource]

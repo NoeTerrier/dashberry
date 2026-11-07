@@ -1,8 +1,13 @@
 use dioxus::prelude::*;
+use dioxus_icons::lucide::Network;
 
 use crate::{
     backend::{network_info, Interface, Ipv4, Ipv6},
-    cards::common::{CardTitle, Filter, InfoType, Row, Tag, TagType},
+    cards::common::{InfoType, Row, Tag, TagType},
+    components::{
+        card::{Card, CardAction, CardContent, CardHeader, CardTitle},
+        select::{Select, SelectOption},
+    },
 };
 
 #[component]
@@ -16,7 +21,7 @@ pub fn NetworkCard() -> Element {
         interfaces_signal.set(Some(i));
     });
 
-    let selected_signal = use_signal(|| "Public".to_string());
+    let mut selected_signal = use_signal(|| "Public".to_string());
 
     let selected = &*selected_signal.read();
 
@@ -33,22 +38,31 @@ pub fn NetworkCard() -> Element {
     });
 
     rsx! {
-        div {
-            class: "card big",
-            div {
-                class: "card-header",
-                CardTitle { title: "🛜 Network interfaces" },
-                Filter {
-                    options: vec!["All".to_string(), "Public".to_string(), "Private".to_string(), "IPv4".to_string(), "IPv6".to_string()],
-                    selected: selected_signal
-                },
-            },
-            div { class: "network-list",
-                match interfaces {
-                    Some(interfaces) =>
-                        rsx! {
-                            for interface in interfaces {{
-                                rsx! {
+        Card {
+            big: true,
+            CardHeader {
+                CardTitle { Network {} "Network interfaces" }
+                CardAction {
+                    Select::<String> {
+                        default_value: "Public",
+                        on_value_change: move |value: Option<String>| {
+                            selected_signal.set(value.unwrap());
+                        },
+                        SelectOption::<String> { index: 0_usize, value: "All", "All"}
+                        SelectOption::<String> { index: 1_usize, value: "Public", "Public"}
+                        SelectOption::<String> { index: 2_usize, value: "Private", "Private"}
+                        SelectOption::<String> { index: 3_usize, value: "IPv4", "IPv4"}
+                        SelectOption::<String> { index: 4_usize, value: "IPv6", "IPv6"}
+                    }
+                }
+            }
+            CardContent {
+                div {
+                    class: "network-list",
+                    match interfaces {
+                        Some(interfaces) =>
+                            rsx! {
+                                for interface in interfaces {
                                     div {
                                         class: "interface",
                                         div {
@@ -71,9 +85,9 @@ pub fn NetworkCard() -> Element {
                                         }
                                     }
                                 }
-                            }}
-                        },
-                    _ => rsx! { p { "Loading..." } }
+                            },
+                        _ => rsx! { p { "Loading..." } }
+                    }
                 }
             }
         }

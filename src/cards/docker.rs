@@ -1,8 +1,10 @@
 use dioxus::prelude::*;
+use dioxus_icons::lucide::Container;
 
 use crate::{
     backend::{docker_info, Containers},
-    cards::common::{CardTitle, Tag, TagType},
+    cards::common::{Tag, TagType},
+    components::card::{Card, CardContent, CardHeader, CardTitle},
 };
 
 #[component]
@@ -14,33 +16,38 @@ pub fn DockerCard() -> Element {
     });
 
     rsx! {
-        div {
-            class: "card big",
-            CardTitle { title: "🐳 Docker containers" }
-            div { class: "docker-list",
-                for container in &*containers.read() {
-                    {
-                        let name = container.name.first().and_then(|s| s.strip_prefix('/')).unwrap_or("No name");
-                        rsx! {
-                            div { class: "container",
-                                img { style: "fill: white;", src: get_icon(&container.project_name) }
-                                div { class: "container-info",
-                                    div { class: "row",
-                                        span { "{name}" }
-                                        Tag {
-                                            text: "{container.status}",
-                                            short_text: "{container.state}",
-                                            tag_type: container_state_tag_type(&container.state),
+        Card {
+            big: true,
+            CardHeader {
+                CardTitle { Container{} "Docker containers" }
+            }
+            CardContent {
+                div {
+                    class: "docker-list",
+                    for container in &*containers.read() {
+                        {
+                            let name = container.name.first().and_then(|s| s.strip_prefix('/')).unwrap_or("No name");
+                            rsx! {
+                                div { class: "container",
+                                    img { style: "fill: white;", src: get_icon(&container.project_name) }
+                                    div { class: "container-info",
+                                        div { class: "row",
+                                            span { "{name}" }
+                                            Tag {
+                                                text: "{container.status}",
+                                                short_text: "{container.state}",
+                                                tag_type: container_state_tag_type(&container.state),
+                                            }
                                         }
+                                        span { class: "container-name note", "{container.image}" }
                                     }
-                                    span { class: "container-name note", "{container.image}" }
                                 }
                             }
                         }
                     }
-                }
-                if containers.read().is_empty() {
-                    p { class: "note", "[ NO CONTAINER ]" }
+                    if containers.read().is_empty() {
+                        p { class: "note", "[ NO CONTAINER ]" }
+                    }
                 }
             }
         }
@@ -57,7 +64,7 @@ fn container_state_tag_type(state: &str) -> TagType {
     }
 }
 
-fn get_icon(image_name: &Option<String>) -> String {    
+fn get_icon(image_name: &Option<String>) -> String {
     if let Some(image_name) = image_name {
         format!("https://cdn.jsdelivr.net/gh/selfhst/icons@main/svg/{image_name}.svg")
     } else {

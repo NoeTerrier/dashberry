@@ -1,3 +1,4 @@
+use dioxus_icons::lucide::Cpu;
 use gloo_timers::future::TimeoutFuture;
 use std::time::Duration;
 
@@ -5,7 +6,8 @@ use dioxus::prelude::*;
 
 use crate::{
     backend::system_info,
-    cards::common::{CardTitle, InfoType, Row},
+    cards::common::{InfoType, Row},
+    components::card::{Card, CardContent, CardHeader, CardTitle},
 };
 use humantime::format_duration;
 
@@ -18,10 +20,11 @@ pub fn SystemCard() -> Element {
     });
 
     rsx!(
-        div {
-            class: "card",
-            CardTitle { title: "🖥️ System" }
-            {
+        Card {
+            CardHeader {
+                CardTitle { Cpu {} "System" }
+            }
+            CardContent {
                 match &*system.read_unchecked() {
                     Some(s) => {
                         let mut t = use_signal(|| s.uptime);

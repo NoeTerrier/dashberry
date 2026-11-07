@@ -1,4 +1,10 @@
+use crate::backend::nginx_status;
+use crate::cards::nginx::{
+    NginxCodeCard, NginxHostsCard, NginxLogsCard, NginxPathCard, NginxUserAgentsCard,
+};
+use crate::components::tabs::*;
 use dioxus::prelude::*;
+use dioxus_icons::lucide::{Computer, Container, Hexagon};
 
 use crate::{
     backend::docker_info,
@@ -19,6 +25,7 @@ static FONT: Asset = asset!(
 
 mod backend;
 mod cards;
+mod components;
 
 fn main() {
     dioxus::launch(App);
@@ -27,9 +34,14 @@ fn main() {
 #[component]
 fn App() -> Element {
     let mut docker_available = use_signal(|| false);
+    let mut nginx_available = use_signal(|| false);
 
     use_future(move || async move {
         docker_available.set(docker_info().await.is_ok());
+    });
+
+    use_future(move || async move {
+        nginx_available.set(nginx_status().await.is_ok());
     });
 
     rsx! {
@@ -42,21 +54,59 @@ fn App() -> Element {
             span { "Dashberry" }
         }
 
-        div {
-            id: "main-grid",
-            SystemCard { }
-            TemperatureCard {  }
-            MemoryCard {  }
-            NetworkCard {  }
-            DisksCard {  }
-            {
-                if *docker_available.read() {
-                    rsx! { DockerCard {  } }
-                } else {
-                    rsx! { }
+        Tabs {
+            default_value: "system",
+            variant: TabsVariant::Default,
+            TabList {
+                TabTrigger { value: "system", index: 0_usize, Computer { style: "height: 1em; width: 1em;" } "System" }
+
+                {
+                    if *docker_available.read() {
+                        rsx! { TabTrigger { value: "nginx", index: 1_usize, Hexagon { style: "height: 1em; width: 1em;" } "Nginx" }}
+                    } else {
+                        rsx! { }
+                    }
+                }
+                {
+                    if *docker_available.read() {
+                        rsx! { TabTrigger { value: "docker", index: 2_usize, Container { style: "height: 1em; width: 1em;" } "Docker" } }
+                    } else {
+                        rsx! { }
+                    }
+                }
+            }
+            TabContent {
+                index: 0_usize,
+                value: "system",
+                div {
+                    id: "main-grid",
+                    SystemCard { }
+                    TemperatureCard {  }
+                    MemoryCard {  }
+                    NetworkCard {  }
+                    DisksCard {  }
+                }
+            }
+            TabContent {
+                index: 1_usize,
+                value: "nginx",
+                div {
+                    id: "main-grid",
+                    NginxPathCard {}
+                    NginxCodeCard {}
+                    NginxUserAgentsCard {}
+                    NginxHostsCard {}
+                    NginxLogsCard {}
+                }
+            }
+            TabContent {
+                index: 2_usize,
+                value: "docker",
+                div {
+                    id: "main-grid",
+                    DockerCard {}
                 }
             }
         }
-
     }
 }

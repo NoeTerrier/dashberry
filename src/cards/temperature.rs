@@ -1,8 +1,12 @@
 use std::time::Duration;
 
 use dioxus::prelude::*;
+use dioxus_icons::lucide::Thermometer;
 
-use crate::{backend::temperature_info, cards::common::CardTitle};
+use crate::{
+    backend::temperature_info,
+    components::card::{Card, CardContent, CardHeader, CardTitle},
+};
 
 #[component]
 pub fn TemperatureCard() -> Element {
@@ -16,19 +20,22 @@ pub fn TemperatureCard() -> Element {
     });
 
     rsx! {
-        div {
-            class: "card",
-            CardTitle { title: "🌡️ Temperature" }
-            div {
-                class: "temperature-div",
-                span { class: "temperature-value", "{temperature:.2}" }
-                span { "°C" }
+        Card {
+            CardHeader {
+                CardTitle { Thermometer {} "Temperature" }
             }
-            p { class: "temperature-hint",
-                if *temperature.read() > 50f32 {
-                    "🔥 warm"
-                } else {
-                    "🌀 ideal"
+            CardContent {
+                div {
+                    class: "temperature-div",
+                    span { class: "temperature-value", "{temperature:.2}" }
+                    span { "°C" }
+                }
+                p { class: "temperature-hint",
+                    if *temperature.read() > 50f32 {
+                        "🔥 warm"
+                    } else {
+                        "🌀 ideal"
+                    }
                 }
             }
         }
