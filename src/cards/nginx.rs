@@ -5,7 +5,9 @@ use crate::{
     backend::nginx_status,
     cards::common::{InfoType, Row},
     components::{
-        card::{Card, CardAction, CardContent, CardHeader, CardTitle}, input::{Input, InputProps}, scroll_area::ScrollArea
+        card::{Card, CardAction, CardContent, CardHeader, CardTitle},
+        input::Input,
+        scroll_area::ScrollArea,
     },
 };
 
@@ -83,8 +85,9 @@ fn code_to_class(code: u16) -> String {
         300..400 => "redirect",
         400..500 => "client_error",
         500..600 => "server_error",
-        _ => "black"
-    }.to_string()
+        _ => "black",
+    }
+    .to_string()
 }
 
 #[component]
