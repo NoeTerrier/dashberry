@@ -7,11 +7,12 @@ struct Styles;
 pub fn Card(
     #[props(extends=GlobalAttributes)] attributes: Vec<Attribute>,
     #[props(default)] big: bool,
+    #[props(default)] tall: bool,
     children: Element,
 ) -> Element {
     rsx! {
         div {
-            class: format!("{} {}", Styles::dx_card, if big {"big"} else {""}),
+            class: format!("{} {} {}", Styles::dx_card, if big {"big"} else {""}, if tall {"tall"} else {""}),
             "data-slot": "card",
             ..attributes,
             {children}

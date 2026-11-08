@@ -94,9 +94,9 @@ fn App() -> Element {
                     id: "main-grid",
                     NginxPathCard {}
                     NginxCodeCard {}
+                    NginxLogsCard {}
                     NginxUserAgentsCard {}
                     NginxHostsCard {}
-                    NginxLogsCard {}
                 }
             }
             TabContent {

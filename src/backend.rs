@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::fmt::Display;
 use std::fs;
 
 use dioxus::prelude::*;
@@ -225,6 +226,12 @@ pub struct NginxLogLine {
     pub status_code: u16,
     pub bytes_sent: u32,
     pub request_time_secs: f32,
+}
+
+impl Display for NginxLogLine {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        Ok(f.write_fmt(format_args!("{self:?}"))?)
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]

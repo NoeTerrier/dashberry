@@ -124,6 +124,10 @@ body {
     grid-column: span 2;
 }
 
+.tall {
+    grid-row: span 2;
+}
+
 /* -------------------------------------------------------------------------- */
 /*                                 Note style                                 */
 /* -------------------------------------------------------------------------- */
@@ -380,8 +384,9 @@ body {
 }
 
 .pill {
+    height: fit-content;
     width: fit-content; 
-    padding: 0.25em; 
+    padding: 0.25em;
     border-radius: 5px; 
     font-size: heavy;
 }
@@ -414,4 +419,42 @@ body {
     .tag-short-text {
         display: block;
     }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                    NGINX                                   */
+/* -------------------------------------------------------------------------- */
+
+.nginx-log-line {
+    display: flex; 
+    gap: 0.5em;
+    align-items: center;
+    white-space: nowrap;
+    margin-bottom: 0.1em;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                 STATUS CODE                                */
+/* -------------------------------------------------------------------------- */
+
+.information {
+    background-color: var(--primary-color);
+}
+
+.success {
+    background-color: var(--ok-color);
+    color: var(--primary-color);
+}
+
+.redirect {
+    background-color: var(--warning-color);
+    color: var(--primary-color);
+}
+
+.client_error {
+    background-color: var(--error-color);
+}
+
+.server_error {
+    background-color: var(--accent-color);
 }

@@ -3,10 +3,9 @@ use dioxus_icons::lucide::{AppWindow, Hash, House, Logs, Signpost};
 
 use crate::{
     backend::nginx_status,
-    cards::common::{InfoType, Row, Tag, TagType},
+    cards::common::{InfoType, Row},
     components::{
-        card::{Card, CardContent, CardHeader, CardTitle},
-        scroll_area::ScrollArea,
+        card::{Card, CardAction, CardContent, CardHeader, CardTitle}, input::{Input, InputProps}, scroll_area::ScrollArea
     },
 };
 
@@ -27,7 +26,8 @@ pub fn NginxPathCard() -> Element {
                 match &*nginx_logs.read_unchecked() {
                     Some(logs) => {
                         rsx! {
-                            div {
+                            ScrollArea {
+                                height: "20em",
                                 for log in &logs.http_paths {
                                     Row { label: &log.0, value: &log.1, info_type: InfoType::Accent }
                                 }
@@ -62,7 +62,7 @@ pub fn NginxCodeCard() -> Element {
                                 for log in &logs.status_codes {
                                     div {
                                         class: "row",
-                                        Pill { color: "green".to_string(), text: log.0.to_string() }
+                                        CodePill { code: log.0 }
                                         span { "{log.1}" }
                                     }
                                 }
@@ -76,13 +76,24 @@ pub fn NginxCodeCard() -> Element {
     )
 }
 
+fn code_to_class(code: u16) -> String {
+    match code {
+        100..200 => "information",
+        200..300 => "success",
+        300..400 => "redirect",
+        400..500 => "client_error",
+        500..600 => "server_error",
+        _ => "black"
+    }.to_string()
+}
+
 #[component]
-pub fn Pill(color: String, text: String) -> Element {
+pub fn CodePill(code: u16) -> Element {
+    let code_class = code_to_class(code);
     rsx! {
         div {
-            class: "pill",
-            style: "background-color: {color}",
-            {text}
+            class: format!("pill {code_class}"),
+            {code.to_string()}
         }
     }
 }
@@ -154,6 +165,8 @@ pub fn NginxHostsCard() -> Element {
 pub fn NginxLogsCard() -> Element {
     let mut nginx_logs = use_signal(|| None);
 
+    let mut search_field = use_signal(String::new);
+
     use_future(move || async move {
         nginx_logs.set(Some(nginx_status().await.unwrap()));
     });
@@ -161,17 +174,29 @@ pub fn NginxLogsCard() -> Element {
     rsx!(
         Card {
             big: true,
+            tall: true,
             CardHeader {
                 CardTitle { Logs {} "Logs" }
+                CardAction {
+                    Input {
+                        oninput: move |e: FormEvent| search_field.set(e.value()),
+                        placeholder: "Search",
+                        value: search_field,
+                        div {"test"}
+                    }
+                }
             }
             CardContent {
                 match &*nginx_logs.read_unchecked() {
                     Some(logs) => {
                         rsx! {
                             ScrollArea {
-                                height: "10em",
-                                for log in &logs.logs {
-                                    p { "{log.timestamp} {log.status_code} {log.http_method} {log.host} {log.http_path} {log.user_agent}" }
+                                height: "20em",
+                                for log in logs.logs.iter().filter(|log| log.to_string().contains(&*search_field.read())) {
+                                    div {
+                                        class: "nginx-log-line",
+                                        span { "{log.timestamp}"} CodePill { code: log.status_code } span {"{log.http_method} {log.host} {log.http_path} {log.user_agent}" }
+                                    }
                                 }
                             }
                         }
